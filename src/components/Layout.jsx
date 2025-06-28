@@ -1,25 +1,25 @@
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import {Outlet,useNavigate} from 'react-router-dom';
+import {useAuth} from '../context/AuthContext';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
-const Layout = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
+const Layout=()=> {
+  const {user}=useAuth();
+  const navigate=useNavigate();
 
-  React.useEffect(() => {
+  React.useEffect(()=> {
     if (!user) {
       navigate('/login');
     }
-  }, [user, navigate]);
+  },[user,navigate]);
 
   if (!user) {
     return null;
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50" style={{ position: 'relative' }}>
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
