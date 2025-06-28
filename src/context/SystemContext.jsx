@@ -21,7 +21,7 @@ export const SystemProvider = ({ children }) => {
     ],
     serviceAreas: [
       'Downtown',
-      'North District',
+      'North District', 
       'South District',
       'East Side',
       'West Side',
@@ -37,6 +37,36 @@ export const SystemProvider = ({ children }) => {
       phone: '+1-800-VORA-WASTE',
       email: 'info@vora.com',
       address: '456 Industrial Blvd, City, State 12345'
+    },
+    apiKeys: {
+      googleMaps: {
+        key: '',
+        enabled: false,
+        lastUpdated: null
+      },
+      stripe: {
+        publishableKey: '',
+        secretKey: '',
+        enabled: false,
+        webhookSecret: '',
+        lastUpdated: null
+      }
+    },
+    paymentSettings: {
+      currency: 'USD',
+      processingFee: 2.9,
+      fixedFee: 0.30,
+      contractorPayoutSchedule: 'weekly', // weekly, biweekly, monthly
+      contractorPayoutDay: 'friday',
+      enableAutomaticPayouts: true,
+      minimumPayoutAmount: 25.00,
+      paymentMethods: {
+        creditCard: true,
+        debitCard: true,
+        bankTransfer: false,
+        applePay: false,
+        googlePay: false
+      }
     }
   });
 
@@ -53,9 +83,33 @@ export const SystemProvider = ({ children }) => {
     localStorage.setItem('voraSystemConfig', JSON.stringify(newConfig));
   };
 
+  const updateApiKey = (provider, keyData) => {
+    const updatedApiKeys = {
+      ...systemConfig.apiKeys,
+      [provider]: {
+        ...systemConfig.apiKeys[provider],
+        ...keyData,
+        lastUpdated: new Date().toISOString()
+      }
+    };
+    updateSystemConfig({ apiKeys: updatedApiKeys });
+  };
+
+  const validateApiKey = async (provider, key) => {
+    // Mock validation - in real app, this would test the API
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const isValid = key.length > 10; // Simple validation
+        resolve({ valid: isValid, message: isValid ? 'API key is valid' : 'Invalid API key format' });
+      }, 1000);
+    });
+  };
+
   const value = {
     systemConfig,
-    updateSystemConfig
+    updateSystemConfig,
+    updateApiKey,
+    validateApiKey
   };
 
   return (
