@@ -15,11 +15,35 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // Mock users for demo
-  const mockUsers = [
-    { id: 1, email: 'customer@vora.com', password: 'password', role: 'customer', name: 'John Customer' },
-    { id: 2, email: 'contractor@vora.com', password: 'password', role: 'contractor', name: 'Mike Contractor' },
-    { id: 3, email: 'admin@vora.com', password: 'password', role: 'administrator', name: 'Sarah Admin' }
-  ];
+  const [users, setUsers] = useState([
+    { 
+      id: 1, 
+      email: 'customer@vora.com', 
+      password: 'password', 
+      role: 'customer', 
+      name: 'John Customer',
+      phone: '+1-555-0101',
+      address: '123 Main St, City, State 12345'
+    },
+    { 
+      id: 2, 
+      email: 'contractor@vora.com', 
+      password: 'password', 
+      role: 'contractor', 
+      name: 'Mike Contractor',
+      phone: '+1-555-0123',
+      address: '456 Oak Ave, City, State 12345'
+    },
+    { 
+      id: 3, 
+      email: 'admin@vora.com', 
+      password: 'password', 
+      role: 'administrator', 
+      name: 'Sarah Admin',
+      phone: '+1-555-0456',
+      address: '789 Admin Blvd, City, State 12345'
+    }
+  ]);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('voraUser');
@@ -30,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    const foundUser = mockUsers.find(u => u.email === email && u.password === password);
+    const foundUser = users.find(u => u.email === email && u.password === password);
     if (foundUser) {
       const { password: _, ...userWithoutPassword } = foundUser;
       setUser(userWithoutPassword);
@@ -38,6 +62,46 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     }
     return { success: false, error: 'Invalid credentials' };
+  };
+
+  const register = async (userData) => {
+    // Check if email already exists
+    const existingUser = users.find(u => u.email === userData.email);
+    if (existingUser) {
+      return { success: false, error: 'Email already registered' };
+    }
+
+    // Create new user
+    const newUser = {
+      id: Date.now(),
+      ...userData,
+      createdAt: new Date().toISOString()
+    };
+
+    // Add to users array
+    setUsers(prev => [...prev, newUser]);
+    
+    // Also save to localStorage for persistence
+    const savedUsers = localStorage.getItem('voraUsers');
+    const currentUsers = savedUsers ? JSON.parse(savedUsers) : [];
+    currentUsers.push(newUser);
+    localStorage.setItem('voraUsers', JSON.stringify(currentUsers));
+
+    return { success: true, user: newUser };
+  };
+
+  const resetPassword = async (email) => {
+    // Check if user exists
+    const foundUser = users.find(u => u.email === email);
+    if (!foundUser) {
+      return { success: false, error: 'No account found with this email address' };
+    }
+
+    // In a real app, you would send an email here
+    // For demo purposes, we'll just simulate success
+    console.log(`Password reset email sent to ${email}`);
+    
+    return { success: true };
   };
 
   const logout = () => {
@@ -48,6 +112,8 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     login,
+    register,
+    resetPassword,
     logout,
     loading
   };

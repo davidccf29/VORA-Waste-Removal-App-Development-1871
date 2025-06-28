@@ -5,7 +5,7 @@ import * as FiIcons from 'react-icons/fi';
 
 const { 
   FiSettings, FiDollarSign, FiMapPin, FiClock, FiInfo, FiPlus, FiTrash2, 
-  FiSave, FiKey, FiCreditCard, FiEye, FiEyeOff, FiCheck, FiX, FiLoader
+  FiSave, FiKey, FiCreditCard, FiEye, FiEyeOff, FiCheck, FiX, FiLoader 
 } = FiIcons;
 
 const SystemSetup = () => {
@@ -80,11 +80,9 @@ const SystemSetup = () => {
 
   const handleApiKeyUpdate = async (provider, field, value) => {
     const updatedKey = { [field]: value };
-    
     if (field === 'enabled') {
       updatedKey.enabled = value;
     }
-    
     updateApiKey(provider, updatedKey);
 
     // Validate key if it's being updated and enabled
@@ -94,10 +92,7 @@ const SystemSetup = () => {
         const validation = await validateApiKey(provider, value);
         setValidationStatus({ ...validationStatus, [provider]: validation });
       } catch (error) {
-        setValidationStatus({ 
-          ...validationStatus, 
-          [provider]: { valid: false, message: 'Validation failed' }
-        });
+        setValidationStatus({ ...validationStatus, [provider]: { valid: false, message: 'Validation failed' } });
       }
       setIsValidating({ ...isValidating, [provider]: false });
     }
@@ -113,10 +108,7 @@ const SystemSetup = () => {
     updateSystemConfig({
       paymentSettings: {
         ...systemConfig.paymentSettings,
-        paymentMethods: {
-          ...systemConfig.paymentSettings.paymentMethods,
-          [method]: enabled
-        }
+        paymentMethods: { ...systemConfig.paymentSettings.paymentMethods, [method]: enabled }
       }
     });
   };
@@ -378,7 +370,6 @@ const SystemSetup = () => {
               </p>
             )}
           </div>
-
           {systemConfig.apiKeys.googleMaps.lastUpdated && (
             <p className="text-xs text-gray-500">
               Last updated: {new Date(systemConfig.apiKeys.googleMaps.lastUpdated).toLocaleString()}
@@ -523,6 +514,7 @@ const SystemSetup = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               <option value="USD">USD - US Dollar</option>
+              <option value="AUD">AUD - Australian Dollar</option>
               <option value="CAD">CAD - Canadian Dollar</option>
               <option value="EUR">EUR - Euro</option>
               <option value="GBP">GBP - British Pound</option>
@@ -643,13 +635,20 @@ const SystemSetup = () => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'waste-types': return renderWasteTypesTab();
-      case 'service-areas': return renderServiceAreasTab();
-      case 'business-hours': return renderBusinessHoursTab();
-      case 'company-info': return renderCompanyInfoTab();
-      case 'api-keys': return renderApiKeysTab();
-      case 'payments': return renderPaymentsTab();
-      default: return null;
+      case 'waste-types':
+        return renderWasteTypesTab();
+      case 'service-areas':
+        return renderServiceAreasTab();
+      case 'business-hours':
+        return renderBusinessHoursTab();
+      case 'company-info':
+        return renderCompanyInfoTab();
+      case 'api-keys':
+        return renderApiKeysTab();
+      case 'payments':
+        return renderPaymentsTab();
+      default:
+        return null;
     }
   };
 
